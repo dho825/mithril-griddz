@@ -2,14 +2,32 @@
 <html>
   <head>
 	  <title>Mithril Griddz</title>
+    <style type="text/css">
+      table {
+        border-collapse: collapse
+      }
+      td {
+        min-width: 100px;
+        border:1px solid grey;
+        padding: 4px;
+      }
+      td.selected {
+        border:3px solid darkgreen;
+      }
+      td:focus {
+        outline: none;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
-    <script src="../public/bundle.js"></script>  
-<!--    
+      
+    <!-- build:vendorjs -->
     <script src="../public/src/vendor.js"></script>
-    <!-- build:js -->
-    <script src="../public/src/app.js"></script>
     <!-- endbuild -->
+    <!-- build:buildjs -->
+    <script src="../public/src/build.js"></script>
+    <!-- endbuild -->
+  
   </body>
 </html>

@@ -6,6 +6,7 @@
  * 	module(rootElement: Node, module: MithrilModule): void; has been changed to mount(...)
  * 	routes(rootElement...) has been adjusted to reflect the renaming of MithrilModule
  *  added component function to MithrilStatic
+ *  added custom interface for m.component as MithrilParamComponent and added "|" for m.mount
  */
 
 // Type definitions for Mithril
@@ -21,7 +22,8 @@ declare module 'mithril' {
 	    prop<T>(value?: T): (value?: T) => T;
 	    prop<T>(promise: MithrilPromise<T>): MithrilPromiseProperty<T>;
 		withAttr(property: string, callback: (value: any) => void): (e: Event) => any;
-		mount(rootElement: Node, module: MithrilComponent): void;
+		mount(rootElement: Node, module: MithrilComponent|MithrilParamComponent): void;
+//		mount(rootElement: Node, module: MithrilComponent|MithrilParamComponent|any): void;
 		trust(html: string): String;
 		render(rootElement: Element, children?: any): void;
 		render(rootElement: HTMLDocument, children?: any): void;
@@ -36,7 +38,13 @@ declare module 'mithril' {
 		sync<T>(promises: MithrilPromise<T>[]): MithrilPromise<T>;
 		startComputation(): void;
 		endComputation(): void;
-		component(component: Object, args?: Object, extras?: any): (component: Object, args?: Object, extras?: any) => MithrilComponent;
+		component(component: Object, args?: Object, extras?: any): (component: Object, args?: Object, extras?: any) => MithrilParamComponent;
+//		component(component?:any, args?:any, extras?:any): any
+	}
+	
+	interface MithrilParamComponent {
+		controller?: Function;
+    	view: Function;
 	}
 	
 	var m: MithrilStatic;

@@ -2,28 +2,36 @@
 import m = require('mithril');
 import Cell = require('./cell');
 
-var cell = new Cell();
+var appCell = new Cell();
 
 class Row implements MithrilComponent {
 	
 	controller:any = function(): any {
-		this.buildFields = function(data:IServerData): any {
-			var isStatic = data.config['isStatic']
-			return m.component(cell, {
-				value: data.value, 
-				isStatic: isStatic
+		this.buildFields = function(data:Object): any {
+			return m.component(appCell, {
+				value: data['value'], 
+				row: data['rowIndex'], 
+				col: data['colIndex'],
+				active: data['active']
 			})
 		}
 	}
 	
-	view(ctrl?: any, args?: any): MithrilVirtualElement {
+	view(ctrl?: Object, args?: Object): MithrilVirtualElement {
 		var cells = [];
-		Object.keys(args.data).forEach(function(prop:string){
-			if (prop != 'config') {
-				cells.push(ctrl.buildFields({value: args.data[prop], config: args.data['config']}))
-			}
+		var i = 0;
+		Object.keys(args['data']).forEach(function(prop:string){
+			i++;
+			cells.push(ctrl['buildFields']({
+				value: args['data'][prop](), 
+				rowIndex: args['rowIndex'], 
+				colIndex: i,
+				active: args['active']
+			}))
 		});
-		return m('tr', cells);
+		return m('tr', {
+			'data-m.id': args['uid']
+			}, cells);
 	}
 }
 
