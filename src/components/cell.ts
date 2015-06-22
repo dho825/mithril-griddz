@@ -9,8 +9,8 @@ class Cell implements MithrilComponent {
 			className: props['highlight']().toString() === props['coord'].toString() ? 'selected' : '',
 			tabindex: -1,
 			onclick: function(e) {
-				e.preventDefault();
-				e.target.focus();
+				//e.preventDefault();
+				//e.target.focus();
 				props['highlight'](props['coord'].slice()) // pass in a new array, not the reference!
 			},
 			onkeydown: function(e) {

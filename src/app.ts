@@ -15,31 +15,33 @@ window.addEventListener('keydown', function(e){
     }
 });
 
-var App = {
+var App = {	
 	controller: function() {
 		this._data = appDB.getData();
+	},
+	_navigate: function(e) {
+		var before = this.vm.highlight().slice(); // a new array, not the reference!
+		var after = before;
+		if (e.keyCode == keymap['left']) {
+			before[0] > 0 ? after[0]-=1 : after[0] = 0 }
+		else if (e.keyCode == keymap['right']) {
+			// TODO: add max col, max row params
+			before[0] < 7 ? after[0]+=1 : after[0] = 7 }
+		else if (e.keyCode == keymap['up']) {
+			before[1] > 0 ? after[1]-=1 : after[1] = 0 }
+		else if (e.keyCode == keymap['down']) {
+			before[1] < 38 ? after[1]+=1 : after[1] = 38 }
+		else {
+			after = before;
+			m.redraw.strategy("none");
+		}
+		this.vm.highlight(after);
 	},
 	vm: {
 		/* coordinates: [column, row] */
 		highlight: m.prop(''),
-		navigate: function(e) {
-			var before = this.highlight().slice(); // a new array, not the reference!
-			var after = before;
-			if (e.keyCode == keymap['left']) {
-				before[0] > 0 ? after[0]-=1 : after[0] = 0 }
-			else if (e.keyCode == keymap['right']) {
-				// TODO: add max col, max row params
-				before[0] < 7 ? after[0]+=1 : after[0] = 7 }
-			else if (e.keyCode == keymap['up']) {
-				before[1] > 0 ? after[1]-=1 : after[1] = 0 }
-			else if (e.keyCode == keymap['down']) {
-				before[1] < 38 ? after[1]+=1 : after[1] = 38 }
-			else {
-				after = before;
-				m.redraw.strategy("none");
-			}
-			this.highlight(after);
-		}
+		range: m.prop(''),
+		navigate: function(e) {return App._navigate(e)}
 	},
 	view: function(ctrl: any) {
 		var vm = App.vm;
