@@ -5,16 +5,14 @@ import Row = require('./row');
 var appRow = new Row();
 
 class Table implements MithrilComponent {
-	view(ctrl?:Object, args?:Object): MithrilVirtualElement {
-		return m('table', 
-			 m('tbody', [
-				args['data'].map(function(data:IProps, index:number){
-					return m.component(appRow, {
-						data: data,
-						uid: 'row_' + (index).toString(),
-						rowIndex: index,
-						active: args['active']
-					})
+	view(ctrl?:Object, props?:Object): MithrilVirtualElement {
+		return m('table', m('tbody', [
+			props['data'].map(function(row){
+				return m.component(appRow, {
+					row: row,
+					highlight: props['highlight'],
+					navigate: props['navigate']
+				})
 				})
 			])
 		)

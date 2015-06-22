@@ -23,7 +23,7 @@ declare module 'mithril' {
 	    prop<T>(promise: MithrilPromise<T>): MithrilPromiseProperty<T>;
 		withAttr(property: string, callback: (value: any) => void): (e: Event) => any;
 		mount(rootElement: Node, module: MithrilComponent|MithrilParamComponent): void;
-//		mount(rootElement: Node, module: MithrilComponent|MithrilParamComponent|any): void;
+		// mount(rootElement: Node, module: MithrilComponent|MithrilParamComponent|any): void;
 		trust(html: string): String;
 		render(rootElement: Element, children?: any): void;
 		render(rootElement: HTMLDocument, children?: any): void;
@@ -39,7 +39,7 @@ declare module 'mithril' {
 		startComputation(): void;
 		endComputation(): void;
 		component(component: Object, args?: Object, extras?: any): (component: Object, args?: Object, extras?: any) => MithrilParamComponent;
-//		component(component?:any, args?:any, extras?:any): any
+		// component(component?:any, args?:any, extras?:any): any
 	}
 	
 	interface MithrilParamComponent {

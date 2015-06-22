@@ -1,5 +1,6 @@
 import m = require('mithril');
 
+// http://lhorie.github.io/mithril-blog/mapping-view-models.htm
 var viewModelMap = function(signature) {
     var map = {}
     return function(key) {

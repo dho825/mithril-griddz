@@ -2,24 +2,14 @@
 import m = require('mithril');
 import Table = require('./components/table');
 // Example Data:
-import appDB = require('./stores/serverModel');
-
-appDB.getData(); // can be put into controller
+import appDB = require('./stores/baseStore');
+//appDB.getData(); // can be put into controller
+//import onKey = require('./utils/onKey');
+import keymap = require('./utils/keymap');
 
 var griddzTable = new Table();
 
-//function move(e) {
-//	var td = e.target.parentNode, tr = td.parentNode, table = tr.parentNode
-//    if (e.keyCode == 37) return tr.childNodes[Math.max(1, td.cellIndex - 1)].firstChild
-//    else if (e.keyCode == 38) return table.childNodes[Math.max(1, tr.rowIndex - 1)].childNodes[td.cellIndex].firstChild
-//    else if (e.keyCode == 39) return tr.childNodes[Math.min(tr.childNodes.length - 1, td.cellIndex + 1)].firstChild
-//    else if (e.keyCode == 40) return table.childNodes[Math.min(table.childNodes.length - 1, tr.rowIndex + 1)].childNodes[td.cellIndex].firstChild
-//    else m.redraw.strategy("none")	
-//}
-
 window.addEventListener('keydown', function(e){
-//	console.log(e.keyCode);
-//	console.log(e.target);
 	if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
     }
@@ -27,24 +17,38 @@ window.addEventListener('keydown', function(e){
 
 var App = {
 	controller: function() {
-		this.active = m.prop(false);
+		this._data = appDB.getData();
 	},
-	
+	vm: {
+		/* coordinates: [column, row] */
+		highlight: m.prop(''),
+		navigate: function(e) {
+			var before = this.highlight().slice(); // a new array, not the reference!
+			var after = before;
+			if (e.keyCode == keymap['left']) {
+				before[0] > 0 ? after[0]-=1 : after[0] = 0 }
+			else if (e.keyCode == keymap['right']) {
+				// TODO: add max col, max row params
+				before[0] < 7 ? after[0]+=1 : after[0] = 7 }
+			else if (e.keyCode == keymap['up']) {
+				before[1] > 0 ? after[1]-=1 : after[1] = 0 }
+			else if (e.keyCode == keymap['down']) {
+				before[1] < 38 ? after[1]+=1 : after[1] = 38 }
+			else {
+				after = before;
+				m.redraw.strategy("none");
+			}
+			this.highlight(after);
+		}
+	},
 	view: function(ctrl: any) {
+		var vm = App.vm;
 		return m.component(griddzTable, {
-			data: appDB['_data'],
-			active: ctrl.active
+			data: ctrl._data,
+			highlight: vm.highlight,
+			navigate: vm.navigate
 		})
 	}
 }
 
 m.mount(document.getElementById('app'), App);
-
-//m.mount(document.getElementById('app'), {view: function() {
-//	return m('input', {
-//		onkeypress: function(e) {
-//			console.log(e);
-//		},
-//		value: 'eh'
-//	})
-//}})
