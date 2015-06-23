@@ -1,11 +1,9 @@
 ///<reference path="../../typings/references.d.ts" />
 import m = require('mithril');
-import viewModelMap = require('../utils/viewModelMap');
 
 class Cell implements MithrilComponent {
 	view(ctrl?: any, props?: Object): MithrilVirtualElement {
 		return m('td', {
-			id: props['coord'],
 			className: props['highlight']().toString() === props['coord'].toString() ? 'selected' : '',
 			tabindex: -1,
 			onclick: function(e) {

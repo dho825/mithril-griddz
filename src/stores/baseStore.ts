@@ -4,13 +4,12 @@ var _db = require('./mockdb');
 
 var AppStore:GriddzStore = {
 	_data: [],
-	getData: function(url?:string): void {
+	getData: function(url?:string): any {
 		if (url) {
 			// TODO: get/return ajax from server...	
 		} else {
 			this.loadData(_db.assignments);
-			 return this._data;
-			// console.log(this._data);
+			return this._data
 			// TODO: set generic config/load config for blank spreadsheet...	
 		}
 	},
@@ -26,7 +25,7 @@ var AppStore:GriddzStore = {
 				colIndex++;
 			})
 			this._data.push(_row);
-		})
+		});
 	},
 	updateCell: function(id:string|number, updates: IUpdateData):void {
 		// TODO: updateCell with new information

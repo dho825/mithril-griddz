@@ -1,0 +1,1 @@
+// http://lhorie.github.io/mithril/components.html#application-architecture-with-components
