@@ -8,50 +8,42 @@ import keymap = require('../utils/keymap');
 var appRow = new Row();
 
 class Table implements MithrilComponent {
-	
-	state:any = {
-		maxCols: m.prop(''),
-		maxRows: m.prop(''),
-		selected: m.prop(''), // [col, row]
-		range: m.prop(''), // [[startCol, startRow], [endCol, endRow]]
-		editing: m.prop(false),
-		// TODO: multi: m.prop([[],[],[],[],...])
-		// TODO: undoState: m.prop(_data(t-1))
-		// TODO: redoState: m.prop(_data(t+1))		
-	}
-	
 	controller:any = function(props) {
-		var _data = props['data'];
-		var _state; var _ctrl = this;
+		// Set local vars from Top Level props:
+		var _data = props['data'],
+			_state = props['state'],
+			_ctrl = this;
 		// TODO: var _config = props['config'];
 		
-		this.setInitialState = function(that) {
-			_state = that.state;
-			this.setMaxes();
-			// TODO: this._logversion(push: _data);
-		}
-		
-		this.setMaxes = function() {
-			while (!_data['coord']) {
-				_data = _data[_data.length-1]
+		this.handleOffset = function() {
+			var elem = <HTMLElement>document.getElementsByClassName('current').item(0); // TODO: create check in case returns > 0;
+			if (elem) {
+				var dimensions = {
+					left: 	(elem.offsetLeft), 
+					top: 	(elem.offsetTop),
+					height: (elem.clientHeight),
+					width: 	(elem.clientWidth)
+				}
+				_state.$offset(dimensions);
 			}
-			var coord = _data['coord']().slice();
-			_state['maxCols'](coord[0]);
-			_state['maxRows'](coord[1]);
 		}
 		
-		this.handleClick = function(coords?) {
+		// Begin EventHandlers:
+		this.handleClick = function(coords?:Array<number>) {
+			_ctrl.handleOffset();
 			if(coords) {
-				_state.selected(coords);
-				_state.range([coords, coords]);
+				_state.$cell(coords);
+				_state.$range([coords, coords]);
 			} else {
-				return _state.selected();
+				return _state.$cell();
 			}
+			Math.random() >= 0.5 ? _state.$action('editing') : _state.$action('');
 		}
 		
 		this.navigate = function(e) {
-			var before = _state.selected().slice(), after = before;
-			var _maxCols = _state.maxCols(), _maxRows = _state.maxRows();
+			_ctrl.handleOffset();
+			var before = _state.$cell().slice(), after = before;
+			var _maxCols = _state.$max().col, _maxRows = _state.$max().row;
 			_ctrl.handleArrows(e, before, after, _maxCols, _maxRows);
 		}
 		
@@ -69,23 +61,25 @@ class Table implements MithrilComponent {
 				after = before;
 				m.redraw.strategy("none");
 			}
-			_state.selected(after);
-			_state.range([after, after]);
+			_state.$cell(after);
+			_state.$range([after, after]);
+			console.log(_state.$action());
 		}
+		//TODO: this.clearCellActions
+		//TODO: this.handleShiftArrows
+		//TODO: this.handleCtrlClick
 	}
 	
 	view(ctrl:Object, props?:Object): MithrilVirtualElement {
-		ctrl['setInitialState'](this);
 		return m('table', m('tbody', [
 			props['data'].map((row) => {
 				return m.component(appRow, {
 					row: row,
-					highlight: ctrl['handleClick'],
-					navigate: ctrl['navigate']
+					handleClick: ctrl['handleClick'],
+					navigate: ctrl['navigate'],
 				})
-				})
-			])
-		)
+			})
+		]))
 	}
 }
 

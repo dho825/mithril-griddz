@@ -1,10 +1,16 @@
 ///<reference path="../typings/references.d.ts" />
 import m = require('mithril');
 import Table = require('./components/table');
+import Navbox = require('./components/navbox');
+import Editor = require('./components/editor');
+import Store = require('./stores/baseStore');
 // Example Data:
-import appDB = require('./stores/baseStore');
+import _db = require('./stores/mockdb');
 
-var griddzTable = new Table();
+var Grid = new Table();
+var Selector = new Navbox();
+var Input = new Editor();
+var appDB = new Store(_db.assignments);
 
 window.addEventListener('keydown', function(e){
 	if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
@@ -12,27 +18,47 @@ window.addEventListener('keydown', function(e){
     }
 });
 
-var App = {	
-//	tableState: {
-//		maxCols: m.prop(''),
-//		maxRows: m.prop(''),
-//		/* coordinates: [column, row] */
-//		selected: m.prop(''), // [col, row]
-//		range: m.prop(''), // [[startCol, startRow], [endCol, endRow]]
-//		editing: m.prop(false),
-//		// TODO: multi: m.prop([[],[],[],[],...])
-//		// TODO: undoState: m.prop(_data(t-1))
-//		// TODO: redoState: m.prop(_data(t+1))
-//	},
+interface IApplicationState {
+	$cell: () => Array<number>;
+	$range: () => Array<[number]>;
+	$max: () => Object;
+	$offset: () => Object;
+	$action: () => string;
+}
+
+var GriddzApp = {		
+	state: <IApplicationState> {
+		$cell:   m.prop([]),
+		$range:  m.prop([]),
+		$max:    m.prop({}),
+		$offset: m.prop({top:-1, left: -1, width: -1, height: -1}),
+		$action: m.prop('') //editing, dragging, selecting
+	},
 	
 	controller: function() {
 		this._data = appDB.getData();
+		this._dataMap = appDB.getDataMap();
+		
+		this.setInitialState = function(that) {
+			var _data = this._data;
+			while (!_data['coord']) {
+				_data = _data[_data.length-1]
+			}
+			var coord = _data['coord']().slice();
+			that.state.$max({col:coord[0], row:coord[1]});
+		};
+		// this._changelog = [];
+		// handleUndo(); handleRedo();
 	},
+	
 	view: function(ctrl: any) {
-		return m.component(griddzTable, { data: ctrl._data,
-			//state: App.tableState
-		})
+		ctrl.setInitialState(this);
+		return [
+			m.component(Grid, {data: ctrl._data, state: this.state}),
+			m.component(Selector, {state: this.state}),
+			m.component(Input, {state: this.state, dataMap: ctrl._dataMap})
+		]
 	}
 }
 
-m.mount(document.getElementById('app'), App);
+m.mount(document.getElementById('app'), GriddzApp);

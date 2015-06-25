@@ -4,16 +4,16 @@ import m = require('mithril');
 class Cell implements MithrilComponent {
 	view(ctrl?: any, props?: Object): MithrilVirtualElement {
 		return m('td', {
-			className: props['highlight']().toString() === props['coord'].toString() ? 'selected' : '',
+			className: props['handleClick']().toString() === props['coord'].toString() ? 'current' : '',
 			tabindex: -1,
 			onclick: function(e) {
 				//e.preventDefault();
 				//e.target.focus();
-				props['highlight'](props['coord'].slice()) // pass in a new array, not the reference!
+				props['handleClick'](props['coord'].slice()); // pass in a new array, not the reference!
 			},
 			onkeydown: function(e) {
 				props['navigate'](e);
-			}
+			},
 		}, props['value'])
 	}
 }
