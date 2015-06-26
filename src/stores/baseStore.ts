@@ -1,6 +1,6 @@
 ///<reference path="../../typings/references.d.ts" />
 import m = require('mithril');
-import n2a = require('../utils/alphaMap');
+import n2a = require('../utils/n2alpha');
 
 interface ICellState {
 	raw: () => string;
@@ -27,7 +27,7 @@ class GriddzStore {
 					editor:   m.prop('general'),
 				})
 				
-				var alphaKey = n2a(colIndex) + (rowIndex+1).toString();// [0,0] = "A1" not "A0"
+				var alphaKey = n2a(colIndex) + (rowIndex + 1).toString();// [0,0] = "A1" not "A0"
 				temp_dataMap[alphaKey] = [colIndex, rowIndex];
 				
 				colIndex++;
