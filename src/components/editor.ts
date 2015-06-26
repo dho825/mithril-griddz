@@ -2,12 +2,26 @@
 import m = require('mithril');
 
 class Editor implements MithrilComponent {
+//	controller:any = function(props) {
+//		this.isEditing = function() {
+//			var _state = props['state'], 
+//				_cell = props['getCell'](_state.$cell().slice());
+//			if (_cell) {
+//				console.log(_cell);
+//				return _cell.editing();	
+//			} else { return false }
+//			
+//		}
+//	}
+	
 	view(ctrl:Object, props?:Object): MithrilVirtualElement {
+	
 		return m('div',
 			{
 				style: {
 					position: 'absolute',
 					display: props['state'].$action() === 'editing' ? 'block' : 'none',
+//					display: ctrl['isEditing']() ? 'block' : 'none',
 					top: props['state'].$offset().top.toString() + 'px',
 					left: props['state'].$offset().left.toString() + 'px',
 				}

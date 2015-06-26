@@ -7,6 +7,7 @@ interface ICellState {
 	value: () => string;
 	coord: () => Array<number>;
 	editor: () => string;
+	editing: () => boolean;
 }
 
 class GriddzStore {
@@ -20,10 +21,10 @@ class GriddzStore {
 			var colIndex = 0;
 			Object.keys(model).forEach((k:string) => {
 				_row.push({
-					raw: m.prop(''),
-					value: m.prop(model[k]),
-					coord: m.prop([colIndex, rowIndex]),
-					editor: m.prop('general'),
+					raw:      m.prop(''),
+					value:    m.prop(model[k]),
+					coord:    m.prop([colIndex, rowIndex]),
+					editor:   m.prop('general'),
 				})
 				
 				var alphaKey = n2a(colIndex) + (rowIndex+1).toString();// [0,0] = "A1" not "A0"
@@ -43,11 +44,6 @@ class GriddzStore {
 	getDataMap():Object {
 		return this._dataMap;
 	}
-	
-//	getCell(key:string):ICellState {
-//		var _coord = this._dataMap[key];
-//		return this._data[_coord[0]][_coord[1]];
-//	}
 	
 	updateCell(id:string|number, updates: IUpdateData):void {
 		// TODO: updateCell with new information

@@ -3,6 +3,7 @@ import m = require('mithril');
 
 class Cell implements MithrilComponent {
 	view(ctrl?: any, props?: Object): MithrilVirtualElement {
+		var clicks = 0, DELAY = 120, timer = null;
 		return m('td', {
 			className: props['handleClick']().toString() === props['coord'].toString() ? 'current' : '',
 			tabindex: -1,

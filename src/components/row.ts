@@ -11,7 +11,6 @@ class Row implements MithrilComponent {
 				return m.component(appCell, {
 					value: cell.value(),
 					coord: cell.coord(),
-					editor: cell.editor(),
 					handleClick: props['handleClick'],
 					navigate: props['navigate'],
 				})

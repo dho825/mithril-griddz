@@ -30,14 +30,14 @@ class Table implements MithrilComponent {
 		
 		// Begin EventHandlers:
 		this.handleClick = function(coords?:Array<number>) {
-			_ctrl.handleOffset();
+			_ctrl.handleOffset();						
 			if(coords) {
+				if ( _state.$cell().toString() !== coords.toString() ) _state.$action('');
 				_state.$cell(coords);
 				_state.$range([coords, coords]);
 			} else {
 				return _state.$cell();
-			}
-			Math.random() >= 0.5 ? _state.$action('editing') : _state.$action('');
+			}	
 		}
 		
 		this.navigate = function(e) {
@@ -63,9 +63,8 @@ class Table implements MithrilComponent {
 			}
 			_state.$cell(after);
 			_state.$range([after, after]);
-			console.log(_state.$action());
+			_state.$action(''); // TODO: set to a "clear action" method 
 		}
-		//TODO: this.clearCellActions
 		//TODO: this.handleShiftArrows
 		//TODO: this.handleCtrlClick
 	}

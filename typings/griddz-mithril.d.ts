@@ -8,6 +8,14 @@ interface GriddzStore {
 	updateCell(id:string|number, updates: IUpdateData): void; //[U]pdate
 }
 
+interface ICellState {
+	raw: () => string;
+	value: () => string;
+	coord: () => Array<number>;
+	editor: () => string;
+	editing: () => boolean;
+}
+
 // Component-specific Interfaces
 interface IProps {
 	id: (s?:string|number) => string | number;
